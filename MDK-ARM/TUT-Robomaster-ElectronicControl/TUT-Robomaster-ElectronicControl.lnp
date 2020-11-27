@@ -39,6 +39,10 @@
 "tut-robomaster-electroniccontrol\cmsis_os2.o"
 "tut-robomaster-electroniccontrol\heap_4.o"
 "tut-robomaster-electroniccontrol\port.o"
+"tut-robomaster-electroniccontrol\chassistask.o"
+"tut-robomaster-electroniccontrol\commontask.o"
+"tut-robomaster-electroniccontrol\gimbaltask.o"
+"tut-robomaster-electroniccontrol\shoottask.o"
 --library_type=microlib --strict --scatter "TUT-Robomaster-ElectronicControl\TUT-Robomaster-ElectronicControl.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

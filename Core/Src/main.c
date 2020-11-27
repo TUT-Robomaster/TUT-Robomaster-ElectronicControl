@@ -58,9 +58,14 @@ TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim8;
 TIM_HandleTypeDef htim12;
+DMA_HandleTypeDef hdma_tim2_ch1;
 
 UART_HandleTypeDef huart8;
 UART_HandleTypeDef huart1;
+UART_HandleTypeDef huart6;
+DMA_HandleTypeDef hdma_uart8_rx;
+DMA_HandleTypeDef hdma_usart1_rx;
+DMA_HandleTypeDef hdma_usart6_rx;
 
 /* Definitions for IdleTask */
 osThreadId_t IdleTaskHandle;
@@ -74,6 +79,54 @@ const osThreadAttr_t IdleTask_attributes = {
   .cb_size = sizeof(IdleTaskControlBlock),
   .priority = (osPriority_t) osPriorityLow,
 };
+/* Definitions for chassisTask */
+osThreadId_t chassisTaskHandle;
+uint32_t chassisTaskBuffer[ 1024 ];
+osStaticThreadDef_t chassisTaskControlBlock;
+const osThreadAttr_t chassisTask_attributes = {
+  .name = "chassisTask",
+  .stack_mem = &chassisTaskBuffer[0],
+  .stack_size = sizeof(chassisTaskBuffer),
+  .cb_mem = &chassisTaskControlBlock,
+  .cb_size = sizeof(chassisTaskControlBlock),
+  .priority = (osPriority_t) osPriorityRealtime,
+};
+/* Definitions for gimbalTask */
+osThreadId_t gimbalTaskHandle;
+uint32_t gimbalTaskBuffer[ 1024 ];
+osStaticThreadDef_t gimbalTaskControlBlock;
+const osThreadAttr_t gimbalTask_attributes = {
+  .name = "gimbalTask",
+  .stack_mem = &gimbalTaskBuffer[0],
+  .stack_size = sizeof(gimbalTaskBuffer),
+  .cb_mem = &gimbalTaskControlBlock,
+  .cb_size = sizeof(gimbalTaskControlBlock),
+  .priority = (osPriority_t) osPriorityRealtime,
+};
+/* Definitions for shootTask */
+osThreadId_t shootTaskHandle;
+uint32_t shootTaskBuffer[ 512 ];
+osStaticThreadDef_t shootTaskControlBlock;
+const osThreadAttr_t shootTask_attributes = {
+  .name = "shootTask",
+  .stack_mem = &shootTaskBuffer[0],
+  .stack_size = sizeof(shootTaskBuffer),
+  .cb_mem = &shootTaskControlBlock,
+  .cb_size = sizeof(shootTaskControlBlock),
+  .priority = (osPriority_t) osPriorityRealtime,
+};
+/* Definitions for commonTask */
+osThreadId_t commonTaskHandle;
+uint32_t commonTaskBuffer[ 512 ];
+osStaticThreadDef_t commonTaskControlBlock;
+const osThreadAttr_t commonTask_attributes = {
+  .name = "commonTask",
+  .stack_mem = &commonTaskBuffer[0],
+  .stack_size = sizeof(commonTaskBuffer),
+  .cb_mem = &commonTaskControlBlock,
+  .cb_size = sizeof(commonTaskControlBlock),
+  .priority = (osPriority_t) osPriorityRealtime,
+};
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -81,6 +134,7 @@ const osThreadAttr_t IdleTask_attributes = {
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_CAN1_Init(void);
 static void MX_SDIO_SD_Init(void);
@@ -94,10 +148,18 @@ static void MX_USART1_UART_Init(void);
 static void MX_CAN2_Init(void);
 static void MX_CRC_Init(void);
 static void MX_TIM12_Init(void);
+static void MX_USART6_UART_Init(void);
 void StartIdleTask(void *argument);
+extern void chassisTaskEntry(void *argument);
+extern void gimbalTaskEntry(void *argument);
+extern void shootTaskEntry(void *argument);
+extern void commonTaskEntry(void *argument);
 
 /* USER CODE BEGIN PFP */
-
+extern void shootTaskEntry(void *argument);
+extern void commonTaskEntry(void *argument);
+extern void chassisTaskEntry(void *argument);
+extern void gimbalTaskEntry(void *argument);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -133,6 +195,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_ADC1_Init();
   MX_CAN1_Init();
   MX_SDIO_SD_Init();
@@ -146,6 +209,7 @@ int main(void)
   MX_CAN2_Init();
   MX_CRC_Init();
   MX_TIM12_Init();
+  MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -172,6 +236,18 @@ int main(void)
   /* Create the thread(s) */
   /* creation of IdleTask */
   IdleTaskHandle = osThreadNew(StartIdleTask, NULL, &IdleTask_attributes);
+
+  /* creation of chassisTask */
+  chassisTaskHandle = osThreadNew(chassisTaskEntry, NULL, &chassisTask_attributes);
+
+  /* creation of gimbalTask */
+  gimbalTaskHandle = osThreadNew(gimbalTaskEntry, NULL, &gimbalTask_attributes);
+
+  /* creation of shootTask */
+  shootTaskHandle = osThreadNew(shootTaskEntry, NULL, &shootTask_attributes);
+
+  /* creation of commonTask */
+  commonTaskHandle = osThreadNew(commonTaskEntry, NULL, &commonTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -785,7 +861,7 @@ static void MX_USART1_UART_Init(void)
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
-  huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.Mode = UART_MODE_RX;
   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
   if (HAL_UART_Init(&huart1) != HAL_OK)
@@ -795,6 +871,65 @@ static void MX_USART1_UART_Init(void)
   /* USER CODE BEGIN USART1_Init 2 */
 
   /* USER CODE END USART1_Init 2 */
+
+}
+
+/**
+  * @brief USART6 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART6_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART6_Init 0 */
+
+  /* USER CODE END USART6_Init 0 */
+
+  /* USER CODE BEGIN USART6_Init 1 */
+
+  /* USER CODE END USART6_Init 1 */
+  huart6.Instance = USART6;
+  huart6.Init.BaudRate = 115200;
+  huart6.Init.WordLength = UART_WORDLENGTH_8B;
+  huart6.Init.StopBits = UART_STOPBITS_1;
+  huart6.Init.Parity = UART_PARITY_NONE;
+  huart6.Init.Mode = UART_MODE_TX_RX;
+  huart6.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart6.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart6) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART6_Init 2 */
+
+  /* USER CODE END USART6_Init 2 */
+
+}
+
+/**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA1_CLK_ENABLE();
+  __HAL_RCC_DMA2_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Stream5_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream5_IRQn);
+  /* DMA1_Stream6_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream6_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream6_IRQn);
+  /* DMA2_Stream1_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream1_IRQn);
+  /* DMA2_Stream2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream2_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream2_IRQn);
 
 }
 
@@ -911,7 +1046,7 @@ void StartIdleTask(void *argument)
 
 /**
   * @brief  Period elapsed callback in non blocking mode
-  * @note   This function is called  when TIM1 interrupt took place, inside
+  * @note   This function is called  when TIM6 interrupt took place, inside
   * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
   * a global variable "uwTick" used as application time base.
   * @param  htim : TIM handle
@@ -922,7 +1057,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* USER CODE BEGIN Callback 0 */
 
   /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM1) {
+  if (htim->Instance == TIM6) {
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */

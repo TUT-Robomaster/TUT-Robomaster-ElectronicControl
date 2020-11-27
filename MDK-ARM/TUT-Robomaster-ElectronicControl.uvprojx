@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F427xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;   ../Drivers/STM32F4xx_HAL_Driver/Inc;   ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;   ../Middlewares/Third_Party/FreeRTOS/Source/include;   ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;   ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;   ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;   ../Drivers/CMSIS/Include</IncludePath>
+              <IncludePath>../Core/Inc;          ../Drivers/STM32F4xx_HAL_Driver/Inc;          ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;          ../Middlewares/Third_Party/FreeRTOS/Source/include;          ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;          ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;          ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;          ../Drivers/CMSIS/Include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -606,6 +606,31 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>Tasks</GroupName>
+          <Files>
+            <File>
+              <FileName>chassisTask.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Tasks\chassisTask.c</FilePath>
+            </File>
+            <File>
+              <FileName>commonTask.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Tasks\commonTask.c</FilePath>
+            </File>
+            <File>
+              <FileName>gimbalTask.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Tasks\gimbalTask.c</FilePath>
+            </File>
+            <File>
+              <FileName>shootTask.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Tasks\shootTask.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>::CMSIS</GroupName>
         </Group>
       </Groups>
@@ -624,5 +649,14 @@
     </components>
     <files/>
   </RTE>
+
+  <LayerInfo>
+    <Layers>
+      <Layer>
+        <LayName>TUT-Robomaster-ElectronicControl</LayName>
+        <LayPrjMark>1</LayPrjMark>
+      </Layer>
+    </Layers>
+  </LayerInfo>
 
 </Project>
