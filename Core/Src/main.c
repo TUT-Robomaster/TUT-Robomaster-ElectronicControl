@@ -59,10 +59,7 @@
 void SystemClock_Config(void);
 void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN PFP */
-extern void shootTaskEntry(void *argument);
-extern void commonTaskEntry(void *argument);
-extern void chassisTaskEntry(void *argument);
-extern void gimbalTaskEntry(void *argument);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
