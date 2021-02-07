@@ -24,7 +24,6 @@
 #include "can.h"
 #include "crc.h"
 #include "dma.h"
-#include "sdio.h"
 #include "spi.h"
 #include "tim.h"
 #include "usart.h"
@@ -52,7 +51,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+uint8_t rxbuffer[18];
+int i = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -64,7 +64,10 @@ void MX_FREERTOS_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	i++;
+}
 /* USER CODE END 0 */
 
 /**
@@ -98,7 +101,6 @@ int main(void)
   MX_DMA_Init();
   MX_ADC1_Init();
   MX_CAN1_Init();
-  MX_SDIO_SD_Init();
   MX_SPI1_Init();
   MX_SPI5_Init();
   MX_TIM2_Init();
@@ -112,7 +114,10 @@ int main(void)
   MX_USART6_UART_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
-
+	HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_2);
+	HAL_UART_Receive_DMA(&huart1,rxbuffer,18);
+	HAL_GPIO_WritePin(GPIOG,GPIO_PIN_13,GPIO_PIN_SET);
   /* USER CODE END 2 */
 
   /* Init scheduler */
