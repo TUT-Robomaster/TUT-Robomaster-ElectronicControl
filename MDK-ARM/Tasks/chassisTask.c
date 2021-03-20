@@ -13,7 +13,8 @@ void chassisTaskEntry(void *argument)
   /* Infinite loop */
   for(;;)
   {
-		osDelay(1);
+		HAL_GPIO_TogglePin(GPIOG,GPIO_PIN_1);
+		osDelay(1000);
   }
   /* USER CODE END 5 */
 }

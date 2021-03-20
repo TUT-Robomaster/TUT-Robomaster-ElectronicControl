@@ -1,4 +1,6 @@
 #include "cmsis_os.h"
+
+extern void refereeDataUnpack(void);
 /* USER CODE BEGIN Header_commonTask */
 /**
   * @brief  Function implementing the IdleTask thread.
@@ -12,7 +14,7 @@ void commonTaskEntry(void *argument)
   /* Infinite loop */
   for(;;)
   {
-		osDelay(1);
+	refereeDataUnpack();
   }
   /* USER CODE END 5 */
 }

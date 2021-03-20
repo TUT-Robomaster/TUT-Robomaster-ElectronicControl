@@ -313,7 +313,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>2</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F427xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;                     ../Drivers/STM32F4xx_HAL_Driver/Inc;                     ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;                     ../Middlewares/Third_Party/FreeRTOS/Source/include;                     ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;                     ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;                     ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;                     ../Drivers/CMSIS/Include</IncludePath>
+              <IncludePath>../Core/Inc;            ../Drivers/STM32F4xx_HAL_Driver/Inc;            ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;            ../Middlewares/Third_Party/FreeRTOS/Source/include;            ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;            ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;            ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;            ../Drivers/CMSIS/Include;            .\BSP;            .\Functions</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -657,6 +657,41 @@
               <FileName>shootTask.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Tasks\shootTask.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>BSP</GroupName>
+          <Files>
+            <File>
+              <FileName>bsp_uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\BSP\bsp_uart.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Functions</GroupName>
+          <Files>
+            <File>
+              <FileName>functions.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Functions\functions.c</FilePath>
+            </File>
+            <File>
+              <FileName>refree_sys.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Functions\refree_sys.c</FilePath>
+            </File>
+            <File>
+              <FileName>user_CRC.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Functions\user_CRC.c</FilePath>
+            </File>
+            <File>
+              <FileName>sysinit.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Functions\sysinit.c</FilePath>
             </File>
           </Files>
         </Group>
