@@ -1,11 +1,11 @@
 #include "usart.h"
 /* For dji remote controler reciever */
-#define DBUS_MAX_LEN     (64)
+#define DBUS_MAX_LEN     (50)
 #define DBUS_BUFLEN      (18)
 #define DBUS_HUART       huart1 
 
 /* For referee system reciever */
-#define RE_MAX_LEN     (128)
+#define RE_MAX_LEN     (256)
 #define RE_BUFLEN      (128)
 #define RE_HUART       huart3 
 
@@ -54,7 +54,6 @@ typedef struct
 
 typedef struct
 {
-	uint8_t  frame_header[5];
 	uint16_t cmd_id;
 	uint8_t  data[119];
 	uint16_t CRC16;
@@ -71,3 +70,4 @@ typedef struct
 
 void bsp_uart_init(void);
 void RC_Callback_Handler(rc_info_t *rc, uint8_t *buff);
+void RE_Decode(re_info_t *re, uint8_t *buff);

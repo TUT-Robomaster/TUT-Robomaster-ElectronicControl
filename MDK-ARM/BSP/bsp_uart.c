@@ -3,15 +3,18 @@
 #include "usart.h"
 #include "bsp_uart.h"
 #include "user_CRC.h"
+
 uint8_t dbus_rx_buffer[DBUS_MAX_LEN];
-int i=0;
 rc_info_t rc;
 
-uint8_t re_buf[DBUS_BUFLEN];
-re_info_t *re = (re_info_t*)re_buf;
+uint8_t re_buf[RE_BUFLEN];
+//re_info_t *re = (re_info_t*)re_buf;
+re_info_t re;
 
 uint8_t pc_buf[PC_BUFLEN];
 pc_info_t *pc = (pc_info_t*)pc_buf;
+
+uint8_t flag = 0x00; //00000000 dbus,refree,pc,rev,rev,rev,rev,rev
 
 uint16_t dma_current_data_counter(DMA_Stream_TypeDef *dma_stream)
 {
@@ -33,7 +36,7 @@ static void USRT_Rx_IDLE_Callback(UART_HandleTypeDef* huart)
 		/* Handle dbus data dbus_buf from DMA */
 		if ((DBUS_MAX_LEN - dma_current_data_counter(huart->hdmarx->Instance)) == DBUS_BUFLEN)
 		{
-			RC_Callback_Handler(&rc,dbus_rx_buffer);
+			flag |= 0x80;
 		}
 		/* Restart dma transmission */
 		__HAL_DMA_SET_COUNTER(huart->hdmarx, DBUS_MAX_LEN);
@@ -43,19 +46,20 @@ static void USRT_Rx_IDLE_Callback(UART_HandleTypeDef* huart)
 	{
 		/* Clear DMA transfer complete flag */
 		__HAL_DMA_DISABLE(huart->hdmarx);
+		
 
 		/* Handle referee system data re_buf from DMA */
 		if (re_buf[0] == 0xA5)
 		{
 			if(Verify_CRC8_Check_Sum(re_buf, 5))
 			{
-				if(Verify_CRC16_Check_Sum(re_buf, (re_buf[5]|re_buf[6]<<8)+9))
-				{
-					memcpy(re, re_buf, 126);
-				}
+//				if(Verify_CRC16_Check_Sum(re_buf, (re_buf[5]|re_buf[6]<<8)+9))
+//				{
+					flag |= 0x40;
+//				}
 			}
 		}
-		
+
 		/* restart dma transmission */
 		__HAL_DMA_SET_COUNTER(huart->hdmarx, RE_MAX_LEN);
 		__HAL_DMA_ENABLE(huart->hdmarx);
@@ -66,9 +70,9 @@ static void USRT_Rx_IDLE_Callback(UART_HandleTypeDef* huart)
 		__HAL_DMA_DISABLE(huart->hdmarx);
 
 		/* Handle PC data pc_buf from DMA */
-		if (re_buf[0] == 0xCC)
+		if (pc_buf[0] == 0xCC)
 		{
-			
+
 		}
 		
 		/* Restart DMA transmission */
@@ -200,5 +204,11 @@ void RC_Callback_Handler(rc_info_t *rc, uint8_t *buff)
 	
 	rc->sw  = (buff[16] | buff[17] << 8) & 0x07FF;
 	rc->sw -= 1024;
+	flag &= 0x7F;
 }
 
+void RE_Decode(re_info_t *re, uint8_t *buff)
+{
+	memcpy(re,buff+5,123);
+	flag &=0xBF;
+}

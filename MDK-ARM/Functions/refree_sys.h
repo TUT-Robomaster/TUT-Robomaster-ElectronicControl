@@ -21,6 +21,7 @@ typedef enum
 	EXT_SHOOT_DATA        = 0x0207,
  
 	EXT_USER_DATA         = 0x0301,
+	EXT_KEY_DATA         = 0x0304,
 } referee_data_id_e;
 
 
@@ -174,7 +175,15 @@ typedef struct
 {
   uint8_t  data[32];
 } server_to_user_t;
-
+typedef struct
+{
+  uint16_t  mouse_x;
+	uint16_t  mouse_y;
+	uint16_t  wheel;
+	uint8_t mouse_l;
+	uint8_t mouse_r;
+	uint16_t key;
+} user_input_t;
 /** 
   * @brief  the data structure receive from judgement
   */
@@ -185,6 +194,7 @@ typedef struct
 	ext_game_robot_state_t            robot_state;        //0x0201
   ext_power_heat_data_t             power_heat_data;    //0x0202
 	ext_shoot_data_t                  shoot_data;         //0x0207
+	user_input_t input;
 } referee_data_t;
 
 void refereeDataUnpack(void);

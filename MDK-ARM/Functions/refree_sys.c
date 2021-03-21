@@ -2,18 +2,18 @@
 #include "bsp_uart.h"
 #include "user_CRC.h"
 #include <string.h>
-extern re_info_t *re;
+extern re_info_t re;
 referee_data_t reRxData;
 uint8_t reTxData[12];
-
+int a=0,b=0,c=0;
 void refereeDataUnpack(void)
 {
-
+	a++;
 	/**Some times incorrect
 	 * uint16_t data_length = (uint16_t)(re->frame_header[1] | re->frame_header[2] << 8);
 	 */
 	
-	switch(re->cmd_id)
+	switch(re.cmd_id)
 	{
 		case EXT_SUPPLY_ACTION:
 		{
@@ -28,23 +28,29 @@ void refereeDataUnpack(void)
 		
 		case EXT_ROBO_STATE:
 		{
-			memcpy(&reRxData.robot_state, &re->data, 15);
+			memcpy(&reRxData.robot_state, re.data, 15);
 			break;
 		}
 		
 		case EXT_POWER_HEAT_DATA:
 		{
-			memcpy(&reRxData.power_heat_data, &re->data, 14);
+			b++;
+			memcpy(&reRxData.power_heat_data, re.data, 14);
 			break;
 		}
 		
 		case EXT_SHOOT_DATA:
 		{
-			memcpy(&reRxData.shoot_data, &re->data, 6);
+			memcpy(&reRxData.shoot_data, re.data, 6);
+			break;
+		}
+		case EXT_KEY_DATA:
+		{
+			memcpy(&reRxData.input, re.data, 12);
 			break;
 		}
 		
-		default:
+		default:c++;
 			break;
 	}
 }

@@ -1,5 +1,6 @@
 #include "cmsis_os.h"
 #include "stm32f4xx_hal.h"
+
 /* USER CODE BEGIN Header_chassisTask */
 /**
   * @brief  Function implementing the IdleTask thread.
@@ -13,8 +14,7 @@ void chassisTaskEntry(void *argument)
   /* Infinite loop */
   for(;;)
   {
-		HAL_GPIO_TogglePin(GPIOG,GPIO_PIN_1);
-		osDelay(1000);
+		osDelay(1);
   }
   /* USER CODE END 5 */
 }
