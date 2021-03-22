@@ -5,10 +5,8 @@
 extern re_info_t re;
 referee_data_t reRxData;
 uint8_t reTxData[12];
-int a=0,b=0,c=0;
 void refereeDataUnpack(void)
 {
-	a++;
 	/**Some times incorrect
 	 * uint16_t data_length = (uint16_t)(re->frame_header[1] | re->frame_header[2] << 8);
 	 */
@@ -34,7 +32,6 @@ void refereeDataUnpack(void)
 		
 		case EXT_POWER_HEAT_DATA:
 		{
-			b++;
 			memcpy(&reRxData.power_heat_data, re.data, 14);
 			break;
 		}
@@ -50,7 +47,7 @@ void refereeDataUnpack(void)
 			break;
 		}
 		
-		default:c++;
+		default:
 			break;
 	}
 }
