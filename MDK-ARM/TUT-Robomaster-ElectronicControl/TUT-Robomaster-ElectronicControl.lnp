@@ -50,10 +50,12 @@
 "tut-robomaster-electroniccontrol\gimbaltask.o"
 "tut-robomaster-electroniccontrol\shoottask.o"
 "tut-robomaster-electroniccontrol\bsp_uart.o"
+"tut-robomaster-electroniccontrol\bsp_can.o"
 "tut-robomaster-electroniccontrol\functions.o"
 "tut-robomaster-electroniccontrol\refree_sys.o"
 "tut-robomaster-electroniccontrol\user_crc.o"
 "tut-robomaster-electroniccontrol\sysinit.o"
+"tut-robomaster-electroniccontrol\pid.o"
 --library_type=microlib --strict --scatter "TUT-Robomaster-ElectronicControl\TUT-Robomaster-ElectronicControl.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

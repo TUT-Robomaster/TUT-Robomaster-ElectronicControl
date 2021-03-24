@@ -59,6 +59,7 @@ void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN PFP */
 extern void Dbus_USRT_Init(void);
 extern void Referee_USRT_Init(void);
+extern void Chassis_Init(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -112,6 +113,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   Dbus_USRT_Init();
 	Referee_USRT_Init();
+	Chassis_Init();
   /* USER CODE END 2 */
 
   /* Init scheduler */

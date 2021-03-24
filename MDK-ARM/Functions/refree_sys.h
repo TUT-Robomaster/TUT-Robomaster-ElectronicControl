@@ -194,7 +194,7 @@ typedef struct
 	ext_game_robot_state_t            robot_state;        //0x0201
   ext_power_heat_data_t             power_heat_data;    //0x0202
 	ext_shoot_data_t                  shoot_data;         //0x0207
-	user_input_t input;
+	user_input_t 											input;							//0x0304
 } referee_data_t;
 
 void refereeDataUnpack(void);

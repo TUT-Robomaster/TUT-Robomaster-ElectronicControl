@@ -313,7 +313,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>6</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F427xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;               ../Drivers/STM32F4xx_HAL_Driver/Inc;               ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;               ../Middlewares/Third_Party/FreeRTOS/Source/include;               ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;               ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;               ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;               ../Drivers/CMSIS/Include;               .\BSP;               .\Functions</IncludePath>
+              <IncludePath>../Core/Inc;                 ../Drivers/STM32F4xx_HAL_Driver/Inc;                 ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;                 ../Middlewares/Third_Party/FreeRTOS/Source/include;                 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;                 ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;                 ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;                 ../Drivers/CMSIS/Include;                 .\BSP;                 .\Functions</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -668,6 +668,11 @@
               <FileType>1</FileType>
               <FilePath>.\BSP\bsp_uart.c</FilePath>
             </File>
+            <File>
+              <FileName>bsp_can.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\BSP\bsp_can.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -692,6 +697,11 @@
               <FileName>sysinit.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Functions\sysinit.c</FilePath>
+            </File>
+            <File>
+              <FileName>pid.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Functions\pid.c</FilePath>
             </File>
           </Files>
         </Group>
