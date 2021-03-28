@@ -4,7 +4,10 @@
 moto_measure_t moto_pit;
 moto_measure_t moto_yaw;
 moto_measure_t moto_poke;	//拨单电机
-moto_measure_t moto_chassis[4] = {0};//4 chassis moto
+moto_measure_t moto_chassis_RF;
+moto_measure_t moto_chassis_LF;
+moto_measure_t moto_chassis_LR;
+moto_measure_t moto_chassis_RR;
 
 int test = 0;
 int can1 = 0;
@@ -15,6 +18,7 @@ CAN_RecvMsg can1_recvmsg;
 CAN_RecvMsg can2_recvmsg;
 HAL_StatusTypeDef  HAL_Status_CAN;
 int error=0;
+void get_moto_measure(moto_measure_t *ptr, CAN_HandleTypeDef* hcan);
 void CAN_User_Init(CAN_HandleTypeDef* hcan )   //用户初始化函数
 {
 	test++;
@@ -92,26 +96,78 @@ void set_gimbal_voltage(int16_t yaw,int16_t pit,int16_t poke,int16_t zero)
 	TR_BUF[7] = zero;
 	HAL_CAN_AddTxMessage(&hcan2,&TxMessage2,TR_BUF,(uint32_t *)CAN_TX_MAILBOX1);
 }
-
+void Chassis_Decode(void)
+{
+	switch(RxMessage1.StdId)
+	{
+		case CAN_MotorLF_ID: get_moto_measure(&moto_chassis_LF, &hcan1);
+		break;
+		case CAN_MotorRF_ID: get_moto_measure(&moto_chassis_RF, &hcan1);
+		break;
+		case CAN_MotorLB_ID: get_moto_measure(&moto_chassis_LR, &hcan1);
+		break;
+		case CAN_MotorRB_ID: get_moto_measure(&moto_chassis_RR, &hcan1);
+		break;
+		default:break;
+	}
+}
+void Gimbal_Decode(void)
+{
+	switch(RxMessage2.StdId)
+	{
+		case CAN_YAW_FEEDBACK_ID:get_moto_measure(&moto_yaw, &hcan2);
+		break;
+		case CAN_PIT_FEEDBACK_ID:get_moto_measure(&moto_pit, &hcan2);
+		break;
+		case CAN_POKE_FEEDBACK_ID:get_moto_measure(&moto_poke, &hcan2);
+		break;
+		default:break;
+	}
+}
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
   if(hcan->Instance==CAN1)
   {
 		can1++;
-     HAL_CAN_GetRxMessage(hcan,CAN_RX_FIFO0,&RxMessage1,can1_recvmsg.Data);
+    HAL_CAN_GetRxMessage(hcan,CAN_RX_FIFO0,&RxMessage1,can1_recvmsg.Data);
+		Chassis_Decode();
   }
 	if(hcan->Instance==CAN2)
   {
 		can2++;
-     HAL_CAN_GetRxMessage(hcan,CAN_RX_FIFO0,&RxMessage2,can2_recvmsg.Data);
+    HAL_CAN_GetRxMessage(hcan,CAN_RX_FIFO0,&RxMessage2,can2_recvmsg.Data);
+		Gimbal_Decode();
   }
 }
 
-void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan)
+void get_moto_measure(moto_measure_t *ptr, CAN_HandleTypeDef* hcan)
 {
-  if(hcan->Instance==CAN2)
-  {
-		can2++;
-     HAL_CAN_GetRxMessage(hcan,CAN_RX_FIFO1,&RxMessage2,can2_recvmsg.Data);
-  }
+	if(hcan == &hcan1)
+	{
+	ptr->last_angle    =  ptr->angle;
+	ptr->angle         =  (uint16_t)(can1_recvmsg.Data[0]<<8 | can1_recvmsg.Data[1]) ;
+	ptr->real_current  =  (int16_t)(can1_recvmsg.Data[2]<<8 | can1_recvmsg.Data[3]);
+	ptr->speed_rpm     =  ptr->real_current;	//这里是因为两种电调对应位不一样的信息
+	ptr->given_current =  (int16_t)(can1_recvmsg.Data[4]<<8 | can1_recvmsg.Data[5])/-5;
+	ptr->hall          =  can1_recvmsg.Data[6];
+	if(ptr->angle - ptr->last_angle > 4096)
+		ptr->round_cnt --;
+	else if (ptr->angle - ptr->last_angle < -4096)
+		ptr->round_cnt ++;
+	ptr->total_angle = ptr->round_cnt * 8192 + ptr->angle - ptr->offset_angle;
+	}
+	else
+	{
+	ptr->last_angle    =  ptr->angle;
+	ptr->angle         =  (uint16_t)(can2_recvmsg.Data[0]<<8 | can2_recvmsg.Data[1]) ;
+	ptr->real_current  =  (int16_t)(can2_recvmsg.Data[2]<<8 | can2_recvmsg.Data[3]);
+	ptr->speed_rpm     =  ptr->real_current;	//这里是因为两种电调对应位不一样的信息
+	ptr->given_current =  (int16_t)(can2_recvmsg.Data[4]<<8 | can2_recvmsg.Data[5])/-5;
+	ptr->hall          =  can2_recvmsg.Data[6];
+	if(ptr->angle - ptr->last_angle > 4096)
+		ptr->round_cnt --;
+	else if (ptr->angle - ptr->last_angle < -4096)
+		ptr->round_cnt ++;
+	ptr->total_angle = ptr->round_cnt * 8192 + ptr->angle - ptr->offset_angle;
+	}
 }

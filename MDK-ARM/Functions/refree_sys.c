@@ -4,7 +4,7 @@
 #include <string.h>
 extern re_info_t re;
 referee_data_t reRxData;
-key_state_t *keyboard;
+key_state_t keyboard;
 uint8_t reTxData[12];
 void refereeDataUnpack(void)
 {
@@ -51,7 +51,7 @@ void refereeDataUnpack(void)
 		default:
 			break;
 	}
-	memcpy(keyboard, &reRxData.input.key, 2);
+	memcpy(&keyboard, &reRxData.input.key, 2);
 }
 
 void refereeDataPack(void)

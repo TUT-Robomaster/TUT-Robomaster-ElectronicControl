@@ -184,6 +184,8 @@ typedef struct
 	uint8_t mouse_r;
 	uint16_t key;
 } user_input_t;
+
+
 /** 
   * @brief  the data structure receive from judgement
   */

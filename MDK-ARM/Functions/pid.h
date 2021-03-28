@@ -29,13 +29,13 @@
 #define CHASSIS_KP 1.0
 #define CHASSIS_KI 0.0
 #define CHASSIS_KD 0.0
-#define YAW_KP 1.0
-#define YAW_KI 0.0
+#define YAW_KP 80.0
+#define YAW_KI -3.0
 #define YAW_KD 0.0
-#define PIT_KP 1.0
+#define PIT_KP 50.0
 #define PIT_KI 0.0
 #define PIT_KD 0.0
-#define POKE_KP 1.0
+#define POKE_KP 0.0
 #define POKE_KI 0.0
 #define POKE_KD 0.0
 
