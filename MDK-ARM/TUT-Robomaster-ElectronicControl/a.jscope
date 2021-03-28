@@ -4,9 +4,9 @@
     <Project>
         <Configuration>
             <JLink>
-                <Options IsRTTSession="0" IsRTTWithTimeStamp="1" SamplingPeriod="20000" Connection="1" SerialNo="0" IP="" TargetDevice="unspecified" TargetInterface="SWD" InterfaceSpeed="4000" />
+                <Options IsRTTSession="0" IsRTTWithTimeStamp="1" SamplingPeriod="100" Connection="1" SerialNo="0" IP="" TargetDevice="STM32F427II" TargetInterface="SWD" InterfaceSpeed="4000" />
             </JLink>
-            <ElfFile Name="C:\Users\lujin\Documents\Git\TUT-Robomaster-ElectronicControl\MDK-ARM\TUT-Robomaster-ElectronicControl\TUT-Robomaster-ElectronicControl.axf" />
+            <ElfFile Name="C:\Users\Jasonlecson\Documents\Git\TUT-Robomaster-ElectronicControl\MDK-ARM\TUT-Robomaster-ElectronicControl\TUT-Robomaster-ElectronicControl.axf" />
             <DataFile Name="" />
             <RawFile Name="" />
             <Scope>
@@ -19,7 +19,7 @@
         </Windows>
         <SelectedSymbols>
             <Symbol>
-                <Options Name="speed_rpm" Address="0x20003A58" Type="short" TypeID="11" Size="2" GraphColorRed="255" GraphColorGreen="215" GraphColorBlue="0" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="0" ShowInGraph="1" YOffset="200" IsAutoConfig="1" YResolution="1" MaxValue="1" File="BSP\bsp_can.c" Scope="0" DrawStyle="0" />
+                <Options Name="speed_rpm" Address="0x200039E8" Type="short" TypeID="11" Size="2" GraphColorRed="255" GraphColorGreen="215" GraphColorBlue="0" YMinSampled="-1606" YMaxSampled="8602" YAvgSampled="4740" Offset="4" ShowInGraph="1" YOffset="200" IsAutoConfig="1" YResolution="5000" MaxValue="10000" File="BSP\bsp_can.c" Scope="0" DrawStyle="0" />
             </Symbol>
         </SelectedSymbols>
     </Project>

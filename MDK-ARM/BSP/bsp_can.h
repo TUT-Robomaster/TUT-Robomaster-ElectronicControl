@@ -15,8 +15,8 @@ typedef enum
 
 	CAN_MotorLF_ID 	= 0x201,    //左前
 	CAN_MotorRF_ID 	= 0x202,		//右前
-	CAN_MotorLB_ID 	= 0x203,    //左后
-	CAN_MotorRB_ID 	= 0x204,		//右后
+	CAN_MotorRB_ID 	= 0x203,		//右后
+	CAN_MotorLB_ID 	= 0x204,    //左后
 }CAN_Message_ID;
 
 /*接收到的云台电机的参数结构体*/

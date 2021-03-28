@@ -135,7 +135,7 @@ void Chassis_Calculate_PC(void)
 	{
 		spd_multi = 1;
 	}
-	vx = (keyboard.W)*spd_multi*100-(keyboard.S)*spd_multi*100;
+	vy = (keyboard.W)*spd_multi*100-(keyboard.S)*spd_multi*100;
 	vx = (keyboard.A)*spd_multi*100-(keyboard.D)*spd_multi*100;
 	omega = (keyboard.E)*spd_multi*100-(keyboard.Q)*spd_multi*100;
 	if(mouse_x_angle == 700)
@@ -155,17 +155,19 @@ void Chassis_Offline(void)
 {
 	set_chassis_current(0,0,0,0);
 }
+
 void Chassis_Calculate_RemoteControl(void)
 {
 	int16_t speed[4];
-	int16_t LF_Speed;
-	int16_t RF_Speed;
-	int16_t RR_Speed;
-	int16_t LR_Speed;
-	Mecanum_calc(rc.ch1*5, rc.ch2*5, rc.sw*5, MAX_CHASSIS_VX_SPEED, speed);
-	LF_Speed = pid_calculate(&pid_chassis_LF,moto_chassis_LF.speed_rpm,speed[0]);
-	RF_Speed = pid_calculate(&pid_chassis_RF,moto_chassis_RF.speed_rpm,speed[1]);
-	RR_Speed = pid_calculate(&pid_chassis_RR,moto_chassis_RR.speed_rpm,speed[2]);
-	LR_Speed = pid_calculate(&pid_chassis_LR,moto_chassis_LR.speed_rpm,speed[3]);
-	set_chassis_current(RF_Speed,LF_Speed,LR_Speed,RR_Speed);
+	int16_t LF_Speed,RF_Speed,RR_Speed,LR_Speed;
+	LF_Speed = moto_chassis_LF.speed_rpm;
+	RF_Speed = moto_chassis_RF.speed_rpm;
+	RR_Speed = moto_chassis_RR.speed_rpm;
+	LR_Speed = moto_chassis_LR.speed_rpm;
+	Mecanum_calc(-rc.ch1*9, rc.ch2*9, rc.sw*9, MAX_CHASSIS_VX_SPEED, speed);
+	
+	set_chassis_current(pid_calculate(&pid_chassis_LF,LF_Speed,speed[0]),
+											pid_calculate(&pid_chassis_RF,RF_Speed,speed[1]),
+											pid_calculate(&pid_chassis_RR,RR_Speed,speed[2]),
+											pid_calculate(&pid_chassis_LR,LR_Speed,speed[3]));
 }

@@ -26,8 +26,8 @@
 
 #define PID_MAX_OUT 30000
 #define INTERGRAL_LIMIT 5000
-#define CHASSIS_KP 1.0
-#define CHASSIS_KI 0.0
+#define CHASSIS_KP 10.0
+#define CHASSIS_KI 1.0
 #define CHASSIS_KD 0.0
 #define YAW_KP 80.0
 #define YAW_KI -3.0

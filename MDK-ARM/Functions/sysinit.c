@@ -3,7 +3,7 @@
 #include "pid.h"
 
 #define PIT_OFFSET 2600
-#define YAW_OFFSET 6200
+#define YAW_OFFSET 4030
 extern void Dbus_USRT_Init(void);
 extern void Referee_USRT_Init(void);
 
