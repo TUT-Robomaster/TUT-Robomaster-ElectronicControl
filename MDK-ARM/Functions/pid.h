@@ -26,16 +26,16 @@
 
 #define PID_MAX_OUT 30000
 #define INTERGRAL_LIMIT 5000
-#define CHASSIS_KP 10.0
-#define CHASSIS_KI 1.0
-#define CHASSIS_KD 0.0
-#define YAW_KP 80.0
-#define YAW_KI -3.0
-#define YAW_KD 0.0
+#define CHASSIS_KP 1.0
+#define CHASSIS_KI 0.002
+#define CHASSIS_KD 0.01
+#define YAW_KP 100.0
+#define YAW_KI -15.0
+#define YAW_KD -18.0
 #define PIT_KP 50.0
 #define PIT_KI 0.0
 #define PIT_KD 0.0
-#define POKE_KP 0.0
+#define POKE_KP 10.0
 #define POKE_KI 0.0
 #define POKE_KD 0.0
 

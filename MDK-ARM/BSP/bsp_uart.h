@@ -24,7 +24,7 @@ typedef struct
 	/* mouse move information */
 	int16_t x;
 	int16_t y;
-	int16_t z;
+	int16_t wheel;
 	
 	/* mouse move information */
 	uint8_t press_l ;
@@ -49,8 +49,15 @@ typedef struct
 	uint16_t C:     1;
 	uint16_t V:     1;
 	uint16_t B:     1;
+	uint16_t rev1:  1;
+	uint16_t reb2:  1;
 } key_state_t;
 
+typedef struct
+{
+	mouse_info_t mouse;
+	key_state_t key;
+}user_input_t;
 
 /** 
   * @brief  remote control information

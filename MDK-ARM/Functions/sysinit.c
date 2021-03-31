@@ -2,8 +2,8 @@
 #include "bsp_can.h"
 #include "pid.h"
 
-#define PIT_OFFSET 2600
-#define YAW_OFFSET 4030
+#define PIT_OFFSET 0
+#define YAW_OFFSET 6150
 extern void Dbus_USRT_Init(void);
 extern void Referee_USRT_Init(void);
 

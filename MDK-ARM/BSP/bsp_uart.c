@@ -8,8 +8,9 @@ uint8_t dbus_rx_buffer[DBUS_MAX_LEN];
 rc_info_t rc;
 
 uint8_t re_buf[RE_BUFLEN];
-//re_info_t *re = (re_info_t*)re_buf;
 re_info_t re;
+
+user_input_t input;
 
 uint8_t pc_buf[PC_BUFLEN];
 pc_info_t *pc = (pc_info_t*)pc_buf;
@@ -46,19 +47,19 @@ static void USRT_Rx_IDLE_Callback(UART_HandleTypeDef* huart)
 	{
 		/* Clear DMA transfer complete flag */
 		__HAL_DMA_DISABLE(huart->hdmarx);
-		
+		memcpy(&input,re_buf+6,12);
 
 		/* Handle referee system data re_buf from DMA */
-		if (re_buf[0] == 0xA5)
-		{
-			if(Verify_CRC8_Check_Sum(re_buf, 5))
-			{
+//		if (re_buf[0] == 0xA5)
+//		{
+//			if(Verify_CRC8_Check_Sum(re_buf, 5))
+//			{
 //				if(Verify_CRC16_Check_Sum(re_buf, (re_buf[5]|re_buf[6]<<8)+9))
 //				{
-					flag |= 0x40;
+//					flag |= 0x40;
 //				}
-			}
-		}
+//			}
+//		}
 
 		/* restart dma transmission */
 		__HAL_DMA_SET_COUNTER(huart->hdmarx, RE_MAX_LEN);
@@ -195,7 +196,7 @@ void RC_Callback_Handler(rc_info_t *rc, uint8_t *buff)
 	
 	rc->mouse.x = ((int16_t)buff[6]) | ((int16_t)buff[7] << 8);     
 	rc->mouse.y = ((int16_t)buff[8]) | ((int16_t)buff[9] << 8);     
-	rc->mouse.z = ((int16_t)buff[10]) | ((int16_t)buff[11] << 8);    
+	rc->mouse.wheel = ((int16_t)buff[10]) | ((int16_t)buff[11] << 8);    
  
   rc->mouse.press_l = buff[12];
   rc->mouse.press_r = buff[13];

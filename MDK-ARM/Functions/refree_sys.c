@@ -42,16 +42,9 @@ void refereeDataUnpack(void)
 			memcpy(&reRxData.shoot_data, re.data, 6);
 			break;
 		}
-		case EXT_KEY_DATA:
-		{
-			memcpy(&reRxData.input, re.data, 12);
-			break;
-		}
-		
 		default:
 			break;
 	}
-	memcpy(&keyboard, &reRxData.input.key, 2);
 }
 
 void refereeDataPack(void)
