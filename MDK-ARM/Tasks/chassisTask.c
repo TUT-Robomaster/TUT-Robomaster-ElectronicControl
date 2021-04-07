@@ -23,7 +23,6 @@ extern struct pid pid_chassis_RR; //Right Rare
 extern rc_info_t rc;
 extern user_input_t input;
 extern int16_t mouse_x_angle;
-int chassistask = 0;
 extern int16_t yaw_angle;
   double sindata,cosdata,rcdata,rcangle;
   float CHout,gimbalangle;
@@ -49,7 +48,6 @@ void chassisTaskEntry(void *argument)
   /* Infinite loop */
   for(;;)
   {
-		chassistask++;
 		if(rc.sw1==1&&rc.sw2==1)
 		{
 			Chassis_Calculate_RemoteControl();
@@ -139,20 +137,20 @@ void Chassis_Calculate_PC(void)
 	{
 		spd_multi = 1;
 	}
-	vy = (input.key.W)*spd_multi*1900-(input.key.S)*spd_multi*1900;
-	vx = (input.key.A)*spd_multi*1900-(input.key.D)*spd_multi*1900;
-	omega = (input.key.Q)*spd_multi*1900-(input.key.E)*spd_multi*1900;
+	vy = (input.key.W)*spd_multi*2400-(input.key.S)*spd_multi*2400;
+	vx = (input.key.A)*spd_multi*2400-(input.key.D)*spd_multi*2400;
+	omega = (input.key.Q)*spd_multi*2400-(input.key.E)*spd_multi*2400;
 	if(mouse_x_angle == 1700)
-	{omega += 1500;}
+	{omega += 2400;}
 	else if(mouse_x_angle == -1700)
-	{omega -= 1500;}
+	{omega -= 2400;}
 	else
 	{}
 	LF_Speed = moto_chassis_LF.speed_rpm;
 	RF_Speed = moto_chassis_RF.speed_rpm;
 	RR_Speed = moto_chassis_RR.speed_rpm;
 	LR_Speed = moto_chassis_LR.speed_rpm;
-	ALLtoward_Mode(6150); //
+	ALLtoward_Mode(4030); //
 	Mecanum_calc(vx, vy, omega, MAX_CHASSIS_VX_SPEED, speed);
 	
 	set_chassis_current(pid_calculate(&pid_chassis_LF,LF_Speed,speed[0]),

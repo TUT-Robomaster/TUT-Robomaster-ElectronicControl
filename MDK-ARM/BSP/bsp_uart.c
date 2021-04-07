@@ -38,6 +38,8 @@ static void USRT_Rx_IDLE_Callback(UART_HandleTypeDef* huart)
 		if ((DBUS_MAX_LEN - dma_current_data_counter(huart->hdmarx->Instance)) == DBUS_BUFLEN)
 		{
 			flag |= 0x80;
+			HAL_GPIO_TogglePin(GPIOG,GPIO_PIN_5);
+			
 		}
 		/* Restart dma transmission */
 		__HAL_DMA_SET_COUNTER(huart->hdmarx, DBUS_MAX_LEN);
@@ -47,7 +49,8 @@ static void USRT_Rx_IDLE_Callback(UART_HandleTypeDef* huart)
 	{
 		/* Clear DMA transfer complete flag */
 		__HAL_DMA_DISABLE(huart->hdmarx);
-		memcpy(&input,re_buf+6,12);
+		memcpy(&input,re_buf+7,12);
+		HAL_GPIO_TogglePin(GPIOG,GPIO_PIN_6);
 
 		/* Handle referee system data re_buf from DMA */
 //		if (re_buf[0] == 0xA5)
@@ -141,6 +144,7 @@ void Dbus_USRT_Init(void)
 	__HAL_UART_ENABLE_IT(&DBUS_HUART, UART_IT_IDLE);
 
 	USRT_DMA_Cfg(&DBUS_HUART, dbus_rx_buffer, DBUS_MAX_LEN);
+	HAL_GPIO_WritePin(GPIOG,GPIO_PIN_1,GPIO_PIN_RESET);
 }
 
 /**
@@ -155,6 +159,7 @@ void Referee_USRT_Init(void)
 	__HAL_UART_ENABLE_IT(&RE_HUART, UART_IT_IDLE);
 
 	USRT_DMA_Cfg(&RE_HUART, re_buf, RE_MAX_LEN);
+	HAL_GPIO_WritePin(GPIOG,GPIO_PIN_2,GPIO_PIN_RESET);
 }
 
 /**

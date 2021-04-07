@@ -8,9 +8,9 @@
   * @retval None
   */
 /* USER CODE END Header_shootTask */
-int shoottask = 0;
 float poke_speed = 0;
 int shoot = 0;
+int shootspeed = 1165;
 extern rc_info_t rc;
 extern user_input_t input;
 void shoot_RemoteControl_ready(void);
@@ -30,7 +30,6 @@ void shootTaskEntry(void *argument)
   /* Infinite loop */
   for(;;)
   {
-		shoottask++;
 		if(rc.sw1==1&&rc.sw2==1)
 		{
 			shoot_off();
@@ -71,27 +70,30 @@ void shoot_PC(void)
 	{
 		
 	}
-	if(input.key.R)
+	if(input.key.C)
 	{
-		TIM2->CCR3 = 1100;
+		shootspeed = 1180;
+	}
+	else if(input.key.Z)
+	{
+		shootspeed = 1165;
 	}
 	else
 	{
-		TIM2->CCR3 = 2300;
 	}
 		if(shoot == 1)
 		{
-			TIM2->CCR1 = 1180;
-			TIM2->CCR2 = 1180;
+			TIM2->CCR1 = shootspeed;//1320
+			TIM2->CCR2 = shootspeed;//1320
 		}
 		else
 		{
-			TIM2->CCR1 = 1000;
-			TIM2->CCR2 = 1000;
+			TIM2->CCR1 = 1000;//1000
+			TIM2->CCR2 = 1000;//1000
 		}
 		if(input.mouse.press_l&&shoot == 1)
 		{
-			poke_speed = shootfrequency(10);
+			poke_speed = shootfrequency(7);
 		}
 		else if(input.mouse.press_r && shoot ==1)
 		{
@@ -108,19 +110,19 @@ float shootfrequency(int frq)
 }
 void shoot_RemoteControl_ready(void)
 {
-	TIM2->CCR1 = 1175;
-	TIM2->CCR2 = 1175;
+	TIM2->CCR1 = 1100;//1175
+	TIM2->CCR2 = 1100;//1175
 	poke_speed = shootfrequency(0);
 }
 void shoot_RemoteControl(void)
 {
-	TIM2->CCR1 = 1175;
-	TIM2->CCR2 = 1175;
+	TIM2->CCR1 = 1175;//1175
+	TIM2->CCR2 = 1175;//1175
 	poke_speed = shootfrequency(5);
 }
 void shoot_off(void)
 {
-	TIM2->CCR1 = 1000;
-	TIM2->CCR2 = 1000;
+	TIM2->CCR1 = 1000;//1000
+	TIM2->CCR2 = 1000;//1000
 	poke_speed = shootfrequency(0);
 }

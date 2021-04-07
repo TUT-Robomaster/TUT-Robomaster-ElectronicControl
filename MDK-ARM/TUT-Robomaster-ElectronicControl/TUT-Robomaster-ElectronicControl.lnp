@@ -56,6 +56,7 @@
 "tut-robomaster-electroniccontrol\user_crc.o"
 "tut-robomaster-electroniccontrol\sysinit.o"
 "tut-robomaster-electroniccontrol\pid.o"
+"tut-robomaster-electroniccontrol\kalman.o"
 --library_type=microlib --strict --scatter "TUT-Robomaster-ElectronicControl\TUT-Robomaster-ElectronicControl.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

@@ -9,9 +9,7 @@ moto_measure_t moto_chassis_LF;
 moto_measure_t moto_chassis_LR;
 moto_measure_t moto_chassis_RR;
 
-int test = 0;
-int can1 = 0;
-int can2 = 0;
+
 CAN_RxHeaderTypeDef RxMessage1;
 CAN_RxHeaderTypeDef RxMessage2;
 CAN_RecvMsg can1_recvmsg;
@@ -21,7 +19,6 @@ int error=0;
 void get_moto_measure(moto_measure_t *ptr, CAN_HandleTypeDef* hcan);
 void CAN_User_Init(CAN_HandleTypeDef* hcan )   //用户初始化函数
 {
-	test++;
   CAN_FilterTypeDef  sFilterConfig;
 	if(hcan == &hcan1)
 	{
@@ -128,15 +125,15 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
   if(hcan->Instance==CAN1)
   {
-		can1++;
     HAL_CAN_GetRxMessage(hcan,CAN_RX_FIFO0,&RxMessage1,can1_recvmsg.Data);
 		Chassis_Decode();
+		HAL_GPIO_TogglePin(GPIOG,GPIO_PIN_7);
   }
 	if(hcan->Instance==CAN2)
   {
-		can2++;
     HAL_CAN_GetRxMessage(hcan,CAN_RX_FIFO0,&RxMessage2,can2_recvmsg.Data);
 		Gimbal_Decode();
+		HAL_GPIO_TogglePin(GPIOG,GPIO_PIN_8);
   }
 }
 

@@ -75,6 +75,7 @@ float pid_calculate(struct pid *pid, float get, float set)
 {
     pid->get = get;
     pid->set = set;
+		pid->last_err = pid->err;
     pid->err = set - get;
     if ((pid->param.input_max_err != 0) && (fabs(pid->err) > pid->param.input_max_err))
     {

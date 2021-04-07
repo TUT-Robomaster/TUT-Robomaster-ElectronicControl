@@ -2,8 +2,7 @@
 #include "bsp_can.h"
 #include "pid.h"
 
-#define PIT_OFFSET 0
-#define YAW_OFFSET 6150
+
 extern void Dbus_USRT_Init(void);
 extern void Referee_USRT_Init(void);
 
@@ -15,6 +14,8 @@ struct pid pid_chassis_RR; //Right Rare
 
 struct pid pid_gimbal_yaw;
 struct pid pid_gimbal_pit;
+struct pid pid_gimbal_yaw_omg;
+struct pid pid_gimbal_pit_omg;
 struct pid pid_gimbal_poke;
 
 extern moto_measure_t moto_pit;
@@ -27,6 +28,7 @@ void Chassis_Init(void)
 	pid_struct_init(&pid_chassis_RF,PID_MAX_OUT,INTERGRAL_LIMIT,CHASSIS_KP,CHASSIS_KI,CHASSIS_KD);
 	pid_struct_init(&pid_chassis_LR,PID_MAX_OUT,INTERGRAL_LIMIT,CHASSIS_KP,CHASSIS_KI,CHASSIS_KD);
 	pid_struct_init(&pid_chassis_RR,PID_MAX_OUT,INTERGRAL_LIMIT,CHASSIS_KP,CHASSIS_KI,CHASSIS_KD);
+	HAL_GPIO_WritePin(GPIOG,GPIO_PIN_3,GPIO_PIN_RESET);
 }
 
 void Gimbal_Init(void)
@@ -34,9 +36,13 @@ void Gimbal_Init(void)
 	CAN_User_Init(&hcan2);
 	pid_struct_init(&pid_gimbal_yaw,PID_MAX_OUT,INTERGRAL_LIMIT,YAW_KP,YAW_KI,YAW_KD);
 	pid_struct_init(&pid_gimbal_pit,PID_MAX_OUT,INTERGRAL_LIMIT,PIT_KP,PIT_KI,PIT_KD);
+	pid_struct_init(&pid_gimbal_yaw_omg,PID_MAX_OUT,INTERGRAL_LIMIT,YAW_OMG_KP,YAW_OMG_KI,YAW_OMG_KD);
+	pid_struct_init(&pid_gimbal_pit_omg,PID_MAX_OUT,INTERGRAL_LIMIT,PIT_OMG_KP,PIT_OMG_KI,PIT_OMG_KD);
 	pid_struct_init(&pid_gimbal_poke,PID_MAX_OUT,INTERGRAL_LIMIT,POKE_KP,POKE_KI,POKE_KD);
-	moto_pit.correcting_angle = PIT_OFFSET;
-	moto_yaw.correcting_angle = YAW_OFFSET;
+	TIM2->CCR1 = 1000;
+	TIM2->CCR2 = 1000;
+	HAL_Delay(1000);
+	HAL_GPIO_WritePin(GPIOG,GPIO_PIN_4,GPIO_PIN_RESET);
 }
 
 

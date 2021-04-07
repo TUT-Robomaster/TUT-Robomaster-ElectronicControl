@@ -703,6 +703,11 @@
               <FileType>1</FileType>
               <FilePath>.\Functions\pid.c</FilePath>
             </File>
+            <File>
+              <FileName>kalman.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Functions\kalman.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

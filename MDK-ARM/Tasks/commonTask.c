@@ -10,7 +10,6 @@ extern rc_info_t rc;
 extern uint8_t re_buf[RE_BUFLEN];
 extern re_info_t re;
 
-int commontask = 0;
 /* USER CODE BEGIN Header_commonTask */
 /**
   * @brief  Function implementing the IdleTask thread.
@@ -24,7 +23,6 @@ void commonTaskEntry(void *argument)
   /* Infinite loop */
   for(;;)
   {
-		commontask++;
 	refereeDataUnpack();
 	
 		switch(flag)
